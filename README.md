@@ -2,6 +2,39 @@
 
 A simple tool to compare the performance of two Yellowstone gRPC endpoints. Thorofare will connect to two concurrent gRPC endpoints, listen for specific per-slot events, and record the relative timings between the endpoints.
 
+## Life Cycle of a Solana Slot -- DRAFT WIP
+The life cycle of a Solana slot is visible through specific events emitted in the Geyser stream.
+
+This SlotStatus enum from `src/types.rs:16` shows the events.
+```
+pub enum SlotStatus {
+    FirstShredReceived,
+    Completed,
+    CreatedBank,
+    Processed,
+    Confirmed,
+    Finalized,
+    Dead,
+}
+```
+
+These metrics indicate the health of the RPC's network ingestion rate and Solana Shred configuration. 
+`FirstShredReceived` marks the start of a slot when we receive the first shred from the current leader.
+`Completed` marks the end of a slot when we have received all Shreds from the leader.
+
+These metrics represent the RPC replaying transactions and voting internally on the Slot. This stage is sensitive to CPU & server configuration.
+`CreatedBank` all Shreds have been replayed and the Slot is ready for internal voting
+`Processed` 
+
+The next three stages are dependent on external factors beyond the control of the RPC node, like validator voting.
+`Confirmed` marks the end of the future slot when the current slot is confirmed by the validators. 
+`Finalized` marks the end of the future slot when the current branch is confirmed by the validators.
+`Dead` marks the marks the end of the future slot when the current branch is dropped by the validators.
+
+## Gathering Metrics
+
+
+
 ## Compilation
 
 ### Build Release Binary
