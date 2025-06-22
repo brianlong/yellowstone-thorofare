@@ -1,6 +1,6 @@
 # Yellowstone Thorofare gRPC Benchmark Tool
 
-A simple tool to compare the performance of two Yellowstone gRPC endpoints.
+A simple tool to compare the performance of two Yellowstone gRPC endpoints. Thorofare will connect to two concurrent gRPC endpoints, listen for specific per-slot events, and record the relative timings between the endpoints.
 
 ## Compilation
 
