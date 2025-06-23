@@ -18,22 +18,25 @@ pub enum SlotStatus {
 }
 ```
 
-These metrics indicate the health of the RPC's network ingestion rate and Solana Shred configuration. 
-`FirstShredReceived` marks the start of a slot when we receive the first shred from the current leader.
-`Completed` marks the end of a slot when we have received all Shreds from the leader.
+Stage 1 indicates the health of the RPC's network shred ingestion rate.  
+- `FirstShredReceived` marks the start of a slot when we receive the first shred from the current leader.  
+- `Completed` marks the end of a slot when we have received all Shreds from the leader.  
 
-These metrics represent the RPC replaying transactions and voting internally on the Slot. This stage is sensitive to CPU & server configuration.
-`CreatedBank` all Shreds have been replayed and the Slot is ready for internal voting
-`Processed` 
+Stage 2 represents the RPC replaying transactions and voting internally on the Slot. This stage is sensitive to CPU & server configuration.  
+- `CreatedBank` all Shreds have been replayed and the Slot is ready for internal voting.  
+- `Processed` the RPC node has voted and marked the slot as 'processed'.  
 
-The next three stages are dependent on external factors beyond the control of the RPC node, like validator voting.
-`Confirmed` marks the end of the future slot when the current slot is confirmed by the validators. 
-`Finalized` marks the end of the future slot when the current branch is confirmed by the validators.
-`Dead` marks the marks the end of the future slot when the current branch is dropped by the validators.
+Stage 3 is dependent on external factors beyond the control of the RPC node, like validator cluster voting.  
+- `Confirmed` marks the end of the future slot when the current slot is confirmed by the validators.  
+- `Finalized` marks the end of the future slot when the current branch is confirmed by the validators.  
+- `Dead` marks the marks the end of the future slot when the current branch is dropped by the validators.  
 
 ## Gathering Metrics
+Stage 1 metrics compare the network shred ingestion of two endpoints. The winning endpoint will be faster to deliver both `FirstShredReceived` and `Completed` messages.
 
+Stage 2 metrics compare the hardware performance, such as CPU performance or other RPC configuration parameters that may affect replay of incoming shreds. The winning endpoint will have the lowest elapsed time between `Completed` and `Processed` events.
 
+Stage 3 metrics are informative, largely due to the external dependency on validator cluster votes. Nonetheless, large differences between endpoints deserve further investigation.
 
 ## Compilation
 
